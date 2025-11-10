@@ -46,5 +46,6 @@ jobs:
 
     - name: Run unit tests
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 04_unit_tests.sql
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 04_unit_tests.sql 2>&1 | tee test_results.log
+        set -e
 
