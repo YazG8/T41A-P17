@@ -62,21 +62,27 @@ Sin el índice GIN, PostgreSQL tendría que escanear toda la tabla. Con el índi
 
 ## 🧪 Pruebas unitarias (usando pgTAP)
 ```sql
-SELECT plan(2);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM usuarios WHERE id = 1 AND data->>'nombre' = 'Ana'
+  ) THEN
+    RAISE EXCEPTION 'Fallo: nombre incorrecto para id 1';
+  END IF;
 
--- Verifica que el nombre sea Ana
-SELECT is(
-  (SELECT data->>'nombre' FROM usuarios WHERE id = 1),
-  'Ana',
-  'Nombre correcto'
-);
+  IF NOT EXISTS (
+    SELECT 1 FROM usuarios WHERE id = 1 AND data->>'activo' = 'true'
+  ) THEN
+    RAISE EXCEPTION 'Fallo: usuario no está activo para id 1';
+  END IF;
 
--- Verifica que el usuario esté activo
-SELECT is(
-  (SELECT data->>'activo' FROM usuarios WHERE id = 1),
-  'true',
-  'Usuario activo'
-);
+  IF NOT EXISTS (
+    SELECT 1 FROM usuarios WHERE id = 2 AND data->>'edad' = '25'
+  ) THEN
+    RAISE EXCEPTION 'Fallo: edad incorrecta para id 2';
+  END IF;
+END;
+$$;
 ```
 
 ---
