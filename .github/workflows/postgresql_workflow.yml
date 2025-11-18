@@ -1,9 +1,6 @@
 name: Run PostgreSQL Tests
 
 on:
-  name: Run PostgreSQL Tests
-
-on:
   push:
     branches: [ "main" ]
   pull_request:
