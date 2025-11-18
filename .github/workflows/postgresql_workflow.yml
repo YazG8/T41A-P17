@@ -1,6 +1,9 @@
 name: Run PostgreSQL Tests
 
 on:
+  name: Run PostgreSQL Tests
+
+on:
   push:
     branches: [ "main" ]
   pull_request:
@@ -31,7 +34,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.X'
+        python-version: '3.10'
 
     - name: Install dependencies
       run: |
@@ -39,8 +42,7 @@ jobs:
         pip install -r requirements.txt      
 
     - name: Wait for PostgreSQL
-      run: |
-        sleep 10
+      run: sleep 10
 
     - name: Set up database schema and data
       run: |
@@ -54,23 +56,25 @@ jobs:
       run: |
         PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f 03_query_data.sql
         
-    - name: Recon data
+    - name: Run JSONB basic exercises
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f jsonb_recomendados.sql
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f jsonb_basicos.sql
         
-    - name: hstore data
+    - name: Run JSONB advanced exercises
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f hstore_ejercicios.sql
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f jsonb_avanzados.sql
         
-    - name: inter data
+    - name: Run HSTORE basic exercises
+      run: |
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f hstore_basicos.sql
+        
+    - name: Run HSTORE intermediate exercises
       run: |
         PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f hstore_intermedios.sql
         
-    - name: avan data
+    - name: Run HSTORE advanced exercises
       run: |
-        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -fhstore_avanzados.sql               
+        PGPASSWORD=postgres psql -h localhost -U postgres -d test_db -f hstore_avanzados.sql               
 
     - name: Run unit tests
-      run: |
-        pytest -vv
-
+      run: pytest -vv
